@@ -1,0 +1,162 @@
+Enter password: *************
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.29 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE payroll_service;
+ERROR 1007 (HY000): Can't create database 'payroll_service'; database exists
+mysql> CREATE DATABASE payroll_services;
+Query OK, 1 row affected (0.52 sec)
+
+mysql> SHOW DATABASE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATABASE' at line 1
+mysql> SHOW DATABASES;
++-----------------------+
+| Database              |
++-----------------------+
+| addressbook_servicedb |
+| candidate             |
+| information_schema    |
+| mysql                 |
+| payroll_service       |
+| payroll_services      |
+| performance_schema    |
+| sakila                |
+| sys                   |
+| world                 |
++-----------------------+
+10 rows in set (0.62 sec)
+
+mysql> USE payroll_services;
+Database changed
+mysql> CREATE TABLE employee_payroll(id int primary key auto_increment,name varchar(20),salary int,start_date date);
+Query OK, 0 rows affected (1.51 sec)
+
+mysql> INSERT INTO employee_payroll(name,salary,start_date) VALUES('roshni',2500000,'2022-04-09');
+Query OK, 1 row affected (0.14 sec)
+
+mysql> INSERT INTO employee_payroll(name,salary,start_date) VALUES('sweety',3500000,'2022-04-01');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> INSERT INTO employee_payroll(name,salary,start_date) VALUES('dilip',4500000,'2022-01-04');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO employee_payroll(name,salary,start_date) VALUES('raj',4500000,'2022-01-23');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> SELECT * FROM employee_payroll;
++----+--------+---------+------------+
+| id | name   | salary  | start_date |
++----+--------+---------+------------+
+|  1 | roshni | 2500000 | 2022-04-09 |
+|  2 | sweety | 3500000 | 2022-04-01 |
+|  3 | dilip  | 4500000 | 2022-01-04 |
+|  4 | raj    | 4500000 | 2022-01-23 |
++----+--------+---------+------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT salary FROM employee_payroll WHERE name='roshni';
++---------+
+| salary  |
++---------+
+| 2500000 |
++---------+
+1 row in set (0.02 sec)
+
+mysql> SELECT * FROM employee_payroll WHERE start_date between cast('2022-01-20' as date) and date(now());
++----+--------+---------+------------+
+| id | name   | salary  | start_date |
++----+--------+---------+------------+
+|  1 | roshni | 2500000 | 2022-04-09 |
+|  2 | sweety | 3500000 | 2022-04-01 |
+|  4 | raj    | 4500000 | 2022-01-23 |
++----+--------+---------+------------+
+3 rows in set (0.04 sec)
+
+mysql> SELECT sum(salary) FROM employee_payroll;
++-------------+
+| sum(salary) |
++-------------+
+|    15000000 |
++-------------+
+1 row in set (0.02 sec)
+
+mysql> SELECT avg(salary) FROM employee_payroll;
++--------------+
+| avg(salary)  |
++--------------+
+| 3750000.0000 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT min(salary) FROM employee_payroll;
++-------------+
+| min(salary) |
++-------------+
+|     2500000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT max(salary) FROM employee_payroll;
++-------------+
+| max(salary) |
++-------------+
+|     4500000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT count(salary) FROM employee_payroll;
++---------------+
+| count(salary) |
++---------------+
+|             4 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE employee_payroll add column phone VARCHAR(12),add column address VARCHAR(50) default ('shahada'),add column department VARCHAR(30) not null;
+Query OK, 4 rows affected (1.53 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE employee_payroll add column basic_pay int, add column deductions int, add column taxable_pay int, add column income_tax int, add column net_pay int;
+Query OK, 0 rows affected (0.35 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESCRIBE employee_payroll;
++-------------+-------------+------+-----+-------------------+-------------------+
+| Field       | Type        | Null | Key | Default           | Extra             |
++-------------+-------------+------+-----+-------------------+-------------------+
+| id          | int         | NO   | PRI | NULL              | auto_increment    |
+| name        | varchar(20) | YES  |     | NULL              |                   |
+| salary      | int         | YES  |     | NULL              |                   |
+| start_date  | date        | YES  |     | NULL              |                   |
+| phone       | varchar(12) | YES  |     | NULL              |                   |
+| address     | varchar(50) | YES  |     | _cp850\'shahada\' | DEFAULT_GENERATED |
+| department  | varchar(30) | NO   |     | NULL              |                   |
+| basic_pay   | int         | YES  |     | NULL              |                   |
+| deductions  | int         | YES  |     | NULL              |                   |
+| taxable_pay | int         | YES  |     | NULL              |                   |
+| income_tax  | int         | YES  |     | NULL              |                   |
+| net_pay     | int         | YES  |     | NULL              |                   |
++-------------+-------------+------+-----+-------------------+-------------------+
+12 rows in set (0.07 sec)
+
+mysql> SELECT * FROM employee_payroll;
++----+--------+---------+------------+-------+---------+------------+-----------+------------+-------------+------------+---------+
+| id | name   | salary  | start_date | phone | address | department | basic_pay | deductions | taxable_pay | income_tax | net_pay |
++----+--------+---------+------------+-------+---------+------------+-----------+------------+-------------+------------+---------+
+|  1 | roshni | 2500000 | 2022-04-09 | NULL  | shahada |            |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  2 | sweety | 3500000 | 2022-04-01 | NULL  | shahada |            |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  3 | dilip  | 4500000 | 2022-01-04 | NULL  | shahada |            |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  4 | raj    | 4500000 | 2022-01-23 | NULL  | shahada |            |      NULL |       NULL |        NULL |       NULL |    NULL |
++----+--------+---------+------------+-------+---------+------------+-----------+------------+-------------+------------+---------+
+4 rows in set (0.00 sec)
+
+mysql>
